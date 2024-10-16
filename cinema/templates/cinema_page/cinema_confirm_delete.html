@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+
+
+{% block title %}
+{{ title }}
+{% endblock title %}
+
+
+{% block main %}
+
+<div class="d-flex justify-content-center">
+    {% if request.user == cinema.author %}
+    <form action="" method="post">
+        {% csrf_token %}
+        <p class="text-center text-light">Вы уверены что хотите удалить кинофильм: {{ cinema.title }}?</p>
+
+        <div class="d-flex justify-content-between">
+            <button class="btn btn-danger rounded" type="submit">Да удалить</button>
+            <a href="{{ cinema.get_absolute_url }}" class="btn btn-success rounded">Нет, я передумал</a>
+        </div>
+
+    </form>
+    {% else %}
+    <h5 class="text-light">Иди в Баню ты не можешь удалит данный кинофильм</h5>
+    {% endif %}
+</div>
+
+
+{% endblock main %}
+
+

@@ -1,0 +1,18 @@
+*{
+    text-decoration: none !important;
+    list-style: none;
+}
+
+main {
+    background: url(../images/bg_cinema.jpg) no-repeat;
+    background-size: cover;
+
+}
+
+
+
+main{
+    width: 100%;
+    min-height: 1000px;
+}
+

@@ -1,0 +1,125 @@
+{% extends 'base.html' %}
+
+
+{% block title %}
+{{ title }}
+{% endblock title %}
+
+
+{% block main %}
+
+<div class="d-flex justify-content-between">
+
+    <div class="col-8">
+
+        <div class="card">
+
+            <div class="card-header d-flex justify-content-between">
+                <h3>{{ cinema.title }}</h3>
+
+                <div class="d-flex justify-content-between">
+                    {% if request.user == cinema.author %}
+                    <a href="{% url 'delete' cinema.pk %}" class="btn btn-danger rounded mx-1">Удалить</a>
+                    <a href="{% url 'update' cinema.pk %}" class="btn btn-warning rounded mx-1">Изменить</a>
+                    {% endif %}
+
+                    <a href="" class="btn btn-success rounded mx-1">Назад</a>
+                </div>
+
+            </div>
+
+            <div class="card-body">
+                {% if cinema.video %}
+
+                <iframe width="100%" height="500" src="{{ cinema.video }}"
+                        title="Неудержимые 4 — Русский трейлер #2 (2023)" frameborder="0"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                        allowfullscreen></iframe>
+
+                {% else %}
+                {% if cinema.photo %}
+                <img src="{{ cinema.photo.url }}" class="card-img-top" alt="..." height="700px">
+                {% else %}
+                <img src="https://images.satu.kz/184881622_w500_h500_yaschik-dlya-instrumenta.jpg"
+                     class="card-img-top" alt="...">
+                {% endif %}
+
+                {% endif %}
+
+                <div class="d-flex justify-content-between align-items-center">
+
+                    <div class="d-flex align-items-center p-4">
+                        <img src="{{ cinema.author.profile.get_photo }}" alt="" height="50"
+                             width="50" class="rounded-circle">
+                        <h4 class="mx-2">Автор:
+                            <a href="{% url 'profile' cinema.author.pk %}">
+                            {{ cinema.author }}
+                            </a>
+                        </h4>
+                    </div>
+                    <p>{{ cinema.created_at }}</p>
+
+                </div>
+
+                <h4>Категория фильма: {{ cinema.category }}</h4>
+                <p>{{ cinema.content }}</p>
+
+                <span>Просмотры: {{ cinema.views }}</span>
+            </div>
+
+        </div>
+
+        <div class="card mt-4 p-2 bg-dark text-light border-light">
+            {% if request.user.is_authenticated %}
+            <form action="{% url 'save_comment' cinema.pk %}" method="post" >
+                {% csrf_token %}
+                {{ comment_form.as_p }}
+
+                <button class="btn btn-secondary rounded" type="submit">Оставить комментарий</button>
+
+            </form>
+            {% else %}
+            <h5>Что бы оставить комментарий <a href="{% url 'login' %}">Войдите</a> в Аккаунт </h5>
+            {% endif %}
+        </div>
+
+        {% for comment in comments %}
+        <div class="card mt-4 p-2 bg-dark text-light border-light">
+            <h4>{{ comment.user.username }}</h4>
+            <p class="small">{{ comment.created_at }}</p>
+            <p>{{ comment.text }}</p>
+        </div>
+        {% endfor %}
+
+
+
+    </div>
+
+    <!--    Дз сделать вывод рекомендуемых фильмов максимум 3 шт картинка название фильма-->
+    <div class="col-3">
+
+        <div class="d-flex flex-column p-4">
+            <h3 class="text-center text-light">Рекомендуемые</h3>
+            {% for cinema in cinemas %}
+            <a href="{{ cinema.get_absolute_url }}" class="card mt-2">
+
+                {% if cinema.photo %}
+                <img src="{{ cinema.photo.url }}" alt="..." height="250px">
+                {% else %}
+                <img height="250" src="https://images.satu.kz/184881622_w500_h500_yaschik-dlya-instrumenta.jpg"
+                     alt="...">
+                {% endif %}
+
+                <p class="text-center fs-5 fw-bold">{{ cinema.title }}</p>
+            </a>
+            {% endfor %}
+
+        </div>
+
+    </div>
+
+
+</div>
+
+
+{% endblock main %}

@@ -1,0 +1,13 @@
+{% load cinema_tags %}
+{% get_categories as categories %}
+<nav class="nav nav-underline justify-content-between flex-column">
+                <a class="nav-item nav-link link-body-light text-light" href="{% url 'index' %}">Все фильмы</a>
+                {% for category in categories %}
+                <a class="nav-item nav-link link-body-light text-light" href="{{ category.get_absolute_url }}">{{ category.title }}</a>
+                {% endfor %}
+            </nav>
+
+
+
+
+
